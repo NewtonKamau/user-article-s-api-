@@ -43,12 +43,24 @@ Route::put('articles/{id}', function($id){
 Route::delete('article/{$id}', function($id){
     Article::find($id)->delete();
 });
-
-
+//this allows protection of user and ensure only authorized users can crud articles
+Route::group(['middleware' => 'auth:api'], function (){
 Route::get('articles', 'ArticleController@index');
 Route::get('articles/{article}', 'ArticleController@show');
 Route::post('articles', 'ArticleController@store');
 Route::put('articles/{article}', 'ArticleController@update');
 Route::delete('articles/{article}', 'ArticleController@delete');
+
+});
+
+//register user
 Route::post('register', 'Auth\RegisterController@register');
+//user login
 Route::post('login', 'Auth\LoginController@login');
+//user logout
+Route::post('logout', 'Auth\LoginController@logout');
+
+//create middleware to protected users
+Route::middleware('auth:api')->get('/user', function(Request $request){
+    return $request->user();
+});

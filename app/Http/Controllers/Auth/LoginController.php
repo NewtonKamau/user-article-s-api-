@@ -49,4 +49,14 @@ class LoginController extends Controller
         }
         return $this->sendFailedLoginResponse($request);
     }
+    public function logout(Request $request){
+        $user = Auth::guard('api')->user();
+
+        if ($user) {
+            $user->api_token = null;
+            $user->save();
+        }
+        return \response()->json(['data' => 'user Logged out.']);
+    }
+    
 }
